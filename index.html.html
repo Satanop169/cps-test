@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Take the CPS Test to measure your clicks per second. Perfect for Minecraft CPS tests and more!">
+    <meta name="keywords" content="CPS Test, Clicks Per Second Test, Minecraft CPS Test">
+    <meta name="author" content="Your Name">
+    <title>CPS Test - Clicks Per Second Test</title>
+    <style>
+        @keyframes colorChange {
+            0% { color: #ff7f7f; }  /* warm color */
+            25% { color: #ffbf7f; }
+            50% { color: #ffff7f; }
+            75% { color: #7fbfff; }
+            100% { color: #7f7fff; }  /* cool color */
+        }
+        body {
+            background: url('https://hypixel.net/attachments/aquarium-png.2881931/') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+        .container {
+            background-color: rgba(28, 28, 28, 0.8);  /* dark grey container with transparency */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            animation: colorChange 5s infinite;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+        .click-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .click-area button {
+            font-size: 1.5rem;
+            padding: 100px 190px;  /* Adjusted to approximate 19cm width */
+            background-color: #fff;  /* white button */
+            color: #000;  /* black text */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .click-area button:hover {
+            background-color: #d9d9d9;
+        }
+        .cps-display {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+        .timer {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-top: 10px;
+        }
+        .timer-input {
+            margin-top: 10px;
+        }
+        .result-display {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CPS Test</h1>
+        <div class="click-area">
+            <button id="clickButton" onclick="handleClick()">Click Here to Start</button>
+        </div>
+        <div class="cps-display" id="cpsDisplay">Clicks per Second: 0 CPS</div>
+        <div class="timer" id="timerDisplay">Time Left: 10 seconds</div>
+        <div class="timer-input">
+            <label for="timerInput">Set Timer (1-200 sec): </label>
+            <input type="number" id="timerInput" min="1" max="200" value="10">
+            <button onclick="setTimer()">Set</button>
+        </div>
+        <div class="result-display" id="resultDisplay"></div>
+    </div>
+
+    <script>
+        let clicks = 0;
+        let timer;
+        let timeLeft = 10;
+        let timerRunning = false;
+
+        function handleClick() {
+            if (!timerRunning) {
+                startTest();
+            } else {
+                clicks++;
+                updateDisplay();
+            }
+        }
+
+        function setTimer() {
+            let newTime = parseInt(document.getElementById('timerInput').value);
+            if (newTime >= 1 && newTime <= 200) {
+                timeLeft = newTime;
+                document.getElementById('timerDisplay').textContent = `Time Left: ${timeLeft} seconds`;
+            } else {
+                alert('Please enter a valid time between 1 and 200 seconds.');
+            }
+        }
+
+        function updateDisplay() {
+            const elapsedTime = parseInt(document.getElementById('timerInput').value) - timeLeft;
+            const cps = elapsedTime > 0 ? (clicks / elapsedTime).toFixed(2) : 0;
+            document.getElementById('cpsDisplay').textContent = `Clicks per Second: ${cps} CPS`;
+        }
+
+        function startTest() {
+            clicks = 0;
+            timerRunning = true;
+            timeLeft = parseInt(document.getElementById('timerInput').value);
+            document.getElementById('clickButton').textContent = 'Click!';
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timerDisplay').textContent = `Time Left: ${timeLeft} seconds`;
+
+                if (timeLeft === 0) {
+                    clearInterval(timer);
+                    timerRunning = false;
+                    const finalCPS = (clicks / parseInt(document.getElementById('timerInput').value)).toFixed(2);
+                    document.getElementById('clickButton').textContent = `Final CPS: ${finalCPS}`;
+                    document.getElementById('resultDisplay').textContent = `Your final CPS is ${finalCPS}`;
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
